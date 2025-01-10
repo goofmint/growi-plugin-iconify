@@ -1,54 +1,25 @@
-# GROIW Plugin template for script
+# GROIW Iconify Plugin
 
-This is a template for creating a GROWI script plugin.
+This is a plugin for GROWI that allows you to use the Iconify icon set.
 
 ## Usage
 
-### Download or folk this repository.
-
-```bash
-git clone git@github.com:goofmint/growi-plugin-script-template.git
+```markdown
+:icon[fa6-brands:aws]{size=24 color=#fff}
 ```
 
-### Change the name of the plugin in package.json.
+## Find out the icon name
 
-```js
-{
-  "name": "growi-plugin-script-template",  // Change this name
-  "version": "1.0.0",
-  "description": "GROWI plugin template for script", // Change this description
-	:
-}
+You can find the icon name on the Iconify website.
+
+[Iconify \- home of open source icons](https://icon-sets.iconify.design/)
+
+```markdown
+:iconify[ICONNAME]{size=24 color=#000}
 ```
 
-### Edit those files
-
-Of course, you can add or remove files as you like.
-
-- client-entry.tsx
-- src/Hello.tsx
-- src/Hello.css
-- src/Demo.tsx
-
-### Preview the plugin
-
-```bash
-yarn dev
-```
-
-### Build the plugin
-
-```bash
-yarn build
-```
-
-## Publish the plugin at GROWI
-
-Add a topic `growi-plugin` on your GitHub repository.
-
-Then, you can see your plugin on the GROWI plugin list page below.
-
-https://growi.org/plugins
+- size: icon size. Default is 24.
+- color: icon color. Default is #000.
 
 ## License
 
