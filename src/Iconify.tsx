@@ -1,13 +1,31 @@
-import { h, Properties } from 'hastscript';
+import { Properties } from 'hastscript';
 import type { Plugin } from 'unified';
 import { Node } from 'unist';
 import { visit } from 'unist-util-visit';
+import 'iconify-icon';
 
-import './Hello.css';
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace JSX {
+    interface IntrinsicElements {
+      'iconify-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & { icon: string };
+    }
+  }
+}
 
-export const helloGROWI = (Tag: React.FunctionComponent<any>): React.FunctionComponent<any> => {
+export const Iconify = (Tag: React.FunctionComponent<any>): React.FunctionComponent<any> => {
   return ({ children, ...props }) => {
     try {
+      const { size, color, iconify } = JSON.parse(props.title);
+      if (iconify) {
+        return (
+          <iconify-icon icon={children} style={{
+            color: color || '#000',
+            fontSize: `${size || 24}px`,
+            verticalAlign: 'bottom',
+          }} />
+        );
+      }
       // your code here
       // return <>Hello, GROWI!</>;
     }
@@ -31,7 +49,7 @@ interface GrowiNode extends Node {
   };
   type: string;
   attributes: {[key: string]: string}
-  children: GrowiNode[] | { type: string, value: string, url?: string }[];
+  children: GrowiNode[] | { type: string, name?: string, value?: string, url?: string }[];
   value: string;
   title?: string;
   url?: string;
@@ -45,18 +63,23 @@ export const remarkPlugin: Plugin = () => {
     // :plugin[xxx]{hello=growi} -> textDirective
     // ::plugin[xxx]{hello=growi} -> leafDirective
     // :::plugin[xxx]{hello=growi} -> containerDirective
-    visit(tree, (node: Node) => {
+    visit(tree, 'textDirective', (node: Node) => {
       const n = node as unknown as GrowiNode;
-      if (n.name !== 'plugin') return;
+      if (n.name !== 'icon') return;
       const data = n.data || (n.data = {});
       // Render your component
-      const { value } = n.children[0];
+      const iconName = n.children.map(c => c.value || c.name).join(':');
+      const { size, color } = n.attributes;
       data.hName = 'a'; // Tag name
-      data.hChildren = [{ type: 'text', value: `${value}, growi!` }]; // Children
+      data.hChildren = [
+        {
+          type: 'text',
+          value: iconName,
+        },
+      ];
       // Set properties
       data.hProperties = {
-        href: 'https://example.com/rss',
-        title: JSON.stringify(n.attributes), // Pass to attributes to the component
+        title: JSON.stringify({ size, color, iconify: true }),
       };
     });
   };
